@@ -1,0 +1,8 @@
+resultat/
+*.pdf
+*.xlsx
+demo.mp4
+statistique/
+printLab_env/
+dossier_examens/
+.env
