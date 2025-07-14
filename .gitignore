@@ -3,6 +3,6 @@ resultat/
 *.xlsx
 demo.mp4
 statistique/
-printLab_env/
+shop_env/
 dossier_examens/
 .env
