@@ -3,6 +3,6 @@ resultat/
 *.xlsx
 demo.mp4
 statistique/
-shop_env/
+shop_venv/
 dossier_examens/
 .env
