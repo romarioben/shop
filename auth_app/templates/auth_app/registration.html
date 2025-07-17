@@ -1,0 +1,62 @@
+{% extends "auth_app/base.html" %}
+
+{% block title %}
+Login
+{% endblock title %}
+
+{% block main-content %}
+<form action="" class="my-5" method="post">
+    {% csrf_token %}
+    <div class="border rounded-2 p-4 mt-5">
+        <div class="login-form">
+            {% comment %} <a href="index.html" class="mb-4 d-flex">
+                <img src="{% static 'app/image/logo1.png' %}"  class="img-fluid login-logo" alt="PrintLab" />
+            </a> {% endcomment %}
+            <h5 class="fw-light mb-5">Créer un compte</h5>
+            {% for fm  in form %}
+                <div class="mb-3">
+                    {% comment %} <label class="form-label">{{ fm. }}</label> {% endcomment %}
+                    {{ fm.label_tag }}
+                    {{ fm }} <small class="text-danger"> {{ fm.errors|striptags }}</small> <br>
+                </div>
+            {% endfor %}
+            
+            <div class="d-grid py-3 mt-4">
+                <button type="submit" class="btn btn-lg btn-primary">
+                    S'enregistrer
+                </button>
+            </div>
+            {% if form.non_field_errors %}
+
+                {% for error in form.non_field_errors %}
+                    <p class="alert alert-danger my-3">{{ error }}</p>
+                {% endfor %}
+                    
+            {% endif %} 
+
+            {% if messages %}
+                    
+                {% for msg in messages %}
+                    <div class="alert alert-{{ msg.tags }}" role="alert"> {{ msg }}</div>
+                {% endfor %}
+                    
+            {% endif %}
+            {% comment %} <div class="text-center py-3">or Login with</div>
+            <div class="d-flex gap-2 justify-content-center">
+                <button type="submit" class="btn btn-outline-danger">
+                    <i class="bi bi-google me-2"></i>Gmail
+                </button>
+                <button type="submit" class="btn btn-outline-info">
+                    <i class="bi bi-facebook me-2"></i>Facebook
+                </button>
+            </div> {% endcomment %}
+            <div class="text-center pt-4">
+                <span>Avez-vous un compte?</span>
+                <a href="{% url "login" %}" class="text-blue text-decoration-underline ms-2">
+                    Connectez-vous</a>
+            </div>
+
+        </div>
+    </div>
+</form>
+{% endblock main-content %}

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Meta -->
+		<meta name="description" content="Django-Auth-app">
+		<meta name="author" content="Romarioben">
+		<link rel="shortcut icon" href="img/favicon.svg" />
+
+		<!-- Title -->
+		<title>Authentification || {% block title %}{% endblock title %}</title>
+
+
+		<!-- *************
+			************ Common Css Files *************
+		************ -->
+		<!-- Bootstrap css -->
+		{% comment %} <link rel="stylesheet" href="{% static 'app/css/bootstrap.min.css' %}">
+		<!-- Icomoon Font Icons css -->
+        <link rel="stylesheet" href="{% static 'app/fonts/style.css' %}">
+		<!-- Main css -->
+        <link rel="stylesheet" href="{% static 'app/css/main.min.css' %}"> {% endcomment %}
+
+		<!-- *************
+			************ Vendor Css Files *************
+		************ -->
+
+	</head>
+    <body>
+        {% block main-content %}
+            
+        {% endblock main-content %}
+    </body>
+
+</html>

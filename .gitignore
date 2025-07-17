@@ -1,8 +1,6 @@
 resultat/
 *.pdf
 *.xlsx
-demo.mp4
-statistique/
 shop_venv/
-dossier_examens/
 .env
+__pycache__/
