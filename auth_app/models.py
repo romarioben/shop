@@ -16,6 +16,8 @@ class User(AbstractUser):
     is_email_verified = models.BooleanField(default=False)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     receive_notifications = models.BooleanField(default=True)
+    numero_telephone = models.CharField(max_length=20, blank=True, null=True)
+    nationality = models.CharField(max_length=50, blank=True, null=True)
 
     def is_admin(self):
         return self.role == self.ADMIN
