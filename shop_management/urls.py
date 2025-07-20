@@ -20,5 +20,6 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    path('shop/', include('shop_app.urls')),
+    path('api/shop/', include('shop_app.api_urls')),
+    path('api/user/', include('auth_app.api_urls')),
 ]

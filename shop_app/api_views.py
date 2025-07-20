@@ -68,3 +68,22 @@ class ShopDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
         shop = self.get_object()
         shop.delete()
         return Response(status=204)
+    
+class ShopNomSearchView(ListCreateAPIView):
+    """
+    View to search for shops by Nom.
+    """
+    permission_classes = [IsAuthenticated]
+    serializer_class = ShopSerializer
+
+    def get_queryset(self):
+        title = self.request.query_params.get('search', None)
+        owner = self.request.user
+        if title and owner:
+            return Shop.objects.filter(title__icontains=title, owner=owner)
+        return Shop.objects.filter(owner=owner)
+
+    def get(self, request, search, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=200)
