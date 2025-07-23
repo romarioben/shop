@@ -24,7 +24,7 @@ class ProductPacketModelAdmin(admin.ModelAdmin):
     
 @admin.register(models.Commande)
 class CommandeModelAdmin(admin.ModelAdmin):
-    list_display = ['id', 'client',  'est_paye', 'produit','quantite', 'prix_total','created_at', 'updated_at']
+    list_display = ['id', 'client',  'est_paye', 'product','quantite', 'prix_total','created_at', 'updated_at']
     search_fields = ['client__nom', 'status']
     list_filter = ['est_paye']
     ordering = ['-created_at']

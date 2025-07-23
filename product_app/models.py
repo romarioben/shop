@@ -54,7 +54,7 @@ class Product(SoftDeleteModel):
     def __str__(self):
         return self.nom
     
-class ProductPacket(SoftDeleteModel, Product):
+class ProductPacket(Product):
     """C'est un paquet de produits, peut être un carton, un sac, d'un même produit"""
     product = models.ForeignKey(Product, related_name='packets', on_delete=models.CASCADE)
     nombre_de_produits = models.PositiveIntegerField(default=2)
@@ -117,8 +117,8 @@ class Commande(SoftDeleteModel):
     quantite = models.PositiveIntegerField(default=1)
     panier = models.ForeignKey(Panier, on_delete=models.CASCADE, related_name='commandes', null=True, blank=True)
     prix_total = models.PositiveIntegerField(null=True, blank=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     est_paye = models.BooleanField(default=False)
     
     

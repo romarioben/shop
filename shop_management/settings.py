@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'rest_framework',
     'shop_app',  # Your shop application
+    'product_app',  # Your product application
+    'notification_app',  # Your notifications application
 ]
 
 MIDDLEWARE = [
