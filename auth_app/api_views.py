@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, CreateAPIView, ListCreateAPIView
 
+import shop_app
+
 from . import models
 from .serializers import UserSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -64,7 +66,11 @@ class ShopGerantListCreateView(ListCreateAPIView):
 
     def get_queryset(self):
         shop_id = self.kwargs.get('shop_id')
-        return models.User.objects.filter(shop__id=shop_id)
+        shop = get_object_or_404(shop_app.models.Shop, id=shop_id)
+        # Return users who are gerants of the specified shop
+        # Assuming 'gerants' is a ManyToMany field in the Shop model
+        
+        return shop.gerants.all()
     
     def get(self, request, shop_id, *args, **kwargs):
         """List all users of a shop"""
@@ -74,8 +80,7 @@ class ShopGerantListCreateView(ListCreateAPIView):
 
     def post(self, request, shop_id, *args, **kwargs):
         data = request.data.copy()
-        del(data['shop_id']) # Remove shop_id from data to avoid conflict
-        shop = get_object_or_404(models.Shop, id=shop_id)
+        shop = get_object_or_404(shop_app.models.Shop, id=shop_id)
         serializer = self.get_serializer(data=data)
         if serializer.is_valid():
             user = serializer.save()
