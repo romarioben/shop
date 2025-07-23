@@ -45,7 +45,7 @@ class UserCreateView(CreateAPIView):
     """
     View to create a new user.
     """
-    #permission_classes = [IsAuthenticated]
+    permission_classes = []
     serializer_class = UserSerializer
 
     def post(self, request, *args, **kwargs):

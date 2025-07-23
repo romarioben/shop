@@ -33,3 +33,5 @@ class Client(SoftDeleteModel):
     prenom = models.CharField(max_length=255)
     adresse = models.CharField(max_length=255, blank=True, null=True)
     numero_telephone = models.CharField(max_length=20, blank=True, null=True)   
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
