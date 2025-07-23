@@ -1,4 +1,4 @@
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, CreateAPIView
 
 from . import models
 from .serializers import UserSerializer
@@ -39,3 +39,17 @@ class UserDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
         user = self.get_object()
         user.delete()
         return Response(status=204)
+
+class UserCreateView(CreateAPIView):
+    """
+    View to create a new user.
+    """
+    #permission_classes = [IsAuthenticated]
+    serializer_class = UserSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response(UserSerializer(user).data, status=201)
+        return Response(serializer.errors, status=400)

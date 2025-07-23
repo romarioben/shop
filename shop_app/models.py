@@ -28,7 +28,7 @@ class Shop(SoftDeleteModel):
 
 class Client(SoftDeleteModel):
     """C'est un client qui peut acheter des produits dans la boutique"""
-    owner = models.ForeignKey('auth_app.User', on_delete=models.CASCADE, related_name='clients')
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='clients')
     nom = models.CharField(max_length=255)
     prenom = models.CharField(max_length=255)
     adresse = models.CharField(max_length=255, blank=True, null=True)

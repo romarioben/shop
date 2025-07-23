@@ -80,7 +80,7 @@ class ShopNomSearchView(ListCreateAPIView):
         title = self.request.query_params.get('search', None)
         owner = self.request.user
         if title and owner:
-            return Shop.objects.filter(title__icontains=title, owner=owner)
+            return Shop.objects.filter(nom__icontains=title, owner=owner)
         return Shop.objects.filter(owner=owner)
 
     def get(self, request, search, *args, **kwargs):
