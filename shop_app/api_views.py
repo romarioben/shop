@@ -22,9 +22,10 @@ class ShopListCreateView(ListCreateAPIView):
         data['owner'] = owner.id
         serializer = self.get_serializer(data=data)
         if serializer.is_valid():
-            serializer.save()
+            shop = serializer.save()
         else:
             return Response(serializer.errors, status=400)
+        shop.gerants.add(owner)
         return Response(serializer.data, status=201)
     
     def get(self, request, *args, **kwargs):

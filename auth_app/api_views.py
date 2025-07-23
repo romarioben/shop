@@ -1,4 +1,5 @@
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, CreateAPIView
+from django.shortcuts import get_object_or_404
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, CreateAPIView, ListCreateAPIView
 
 from . import models
 from .serializers import UserSerializer
@@ -51,5 +52,33 @@ class UserCreateView(CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+            return Response(UserSerializer(user).data, status=201)
+        return Response(serializer.errors, status=400)
+    
+class ShopGerantListCreateView(ListCreateAPIView):
+    """
+    View to list all users of a shop or create a new user in a shop.
+    """
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        shop_id = self.kwargs.get('shop_id')
+        return models.User.objects.filter(shop__id=shop_id)
+    
+    def get(self, request, shop_id, *args, **kwargs):
+        """List all users of a shop"""
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=200)
+
+    def post(self, request, shop_id, *args, **kwargs):
+        data = request.data.copy()
+        del(data['shop_id']) # Remove shop_id from data to avoid conflict
+        shop = get_object_or_404(models.Shop, id=shop_id)
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid():
+            user = serializer.save()
+            shop.gerants.add(user) # Add user to shop's gerants
             return Response(UserSerializer(user).data, status=201)
         return Response(serializer.errors, status=400)
