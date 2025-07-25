@@ -6,13 +6,15 @@ from django.conf import settings
 from notification_app.models import Log
 from django.utils import timezone
 
+import shop_app
+
 class Category(SoftDeleteModel):
     """C'est une catégorie de produits, par exemple: Fruits, Légumes, etc."""
-    nom = models.CharField(max_length=255, unique=True)
+    nom = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='categories')
+    shop = models.ForeignKey(shop_app.models.Shop, on_delete=models.CASCADE, related_name='categories')
 
     def __str__(self):
         return self.nom
@@ -20,6 +22,7 @@ class Category(SoftDeleteModel):
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
+        unique_together = ('nom', 'shop')
 
 class Product(SoftDeleteModel):
     def product_image_upload_to(instance, filename):
@@ -28,7 +31,7 @@ class Product(SoftDeleteModel):
     nom = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     prix = models.PositiveIntegerField()
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     image = models.ImageField(upload_to=product_image_upload_to, blank=True, null=True)
     stock = models.PositiveIntegerField(default=0)
     shop = models.ForeignKey('shop_app.Shop', on_delete=models.CASCADE, related_name='products')
@@ -54,6 +57,11 @@ class Product(SoftDeleteModel):
     def __str__(self):
         return self.nom
     
+    class Meta:
+        verbose_name = 'Product'
+        verbose_name_plural = 'Products'
+        unique_together = ('nom', 'shop')
+    
 class ProductPacket(Product):
     """C'est un paquet de produits, peut être un carton, un sac, d'un même produit"""
     product = models.ForeignKey(Product, related_name='packets', on_delete=models.CASCADE)
@@ -63,11 +71,9 @@ class ProductPacket(Product):
         """Déballer le paquet, décrémente le nombre de paquets et crée des produits individuels, incrementant le stock du shop"""
         if self.stock >= quantite:
             self.stock -= quantite
-            self.product.stock += self.nombre_de_produits * quantite
+            self.product.change_stock(self.nombre_de_produits * quantite, f'Déballé un {self.nom} en {self.nombre_de_produits}  {self.product.nom} ', user=user)
             self.product.save()
             self.save()
-            # Log the action
-            Log.objects.create(user=user, action=f'Déballé un {self.nom} en {self.nombre_de_produits}  {self.product.nom} ')
             return True
         return False
     

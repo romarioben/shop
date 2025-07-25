@@ -22,8 +22,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     category_nom = serializers.ReadOnlyField(source='category.nom')
-    expired = serializers.SerializerMethodField(method_name='is_expired')
-    is_low_stock = serializers.SerializerMethodField('is_low_stock')
+    expired = serializers.SerializerMethodField()
+    is_low_stock = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -40,11 +40,17 @@ class ProductSerializer(serializers.ModelSerializer):
         instance.updated_at = timezone.now()
         instance.save()
         return instance
+    
+    def get_expired(self, obj):
+        return obj.is_expired()
+    
+    def get_is_low_stock(self, obj):
+        return obj.is_low_stock()
 
 class ProductPacketSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductPacket
-        fields = ('nom', 'prix', 'stock', 'nombre_de_produits', 'product')
+        fields = '__all__'
         read_only_fields = ('id', 'created_at', 'updated_at')
 
     def create(self, validated_data):
