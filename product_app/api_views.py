@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from shop_app.models import Shop
+from shop_app.permissions import ShopPermission
 from .models import Product, Category, Commande, Panier, ProductPacket
 from .serializers import CategorySerializer, CommandeSerializer, PanierSerializer, ProductSerializer, ProductPacketSerializer
 from rest_framework.response import Response
@@ -9,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 
 class CategoryListCreateAPIView(ListCreateAPIView):
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ShopPermission]
     
     def get_queryset(self):
         shop_id = self.kwargs.get('shop_id')
@@ -38,7 +39,7 @@ class CategoryListCreateAPIView(ListCreateAPIView):
 
 class CategoryDetailUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ShopPermission]
     
     def get_object(self):
         shop_id = self.kwargs.get('shop_id')
@@ -79,7 +80,7 @@ class CategoryDetailUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
 
 class ProductListCreateAPIView(ListCreateAPIView):
     serializer_class = ProductSerializer 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ShopPermission]
     
     def get_queryset(self):
         shop_id = self.kwargs.get('shop_id')
@@ -106,7 +107,7 @@ class ProductListCreateAPIView(ListCreateAPIView):
     
 class ProductDetailUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ShopPermission]
     
     def get_object(self):
         shop_id = self.kwargs.get('shop_id')
@@ -147,7 +148,7 @@ class ProductDetailUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
     
 class ProductPacketListCreateAPIView(ListCreateAPIView):
     serializer_class = ProductPacketSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ShopPermission]
     
     def get_queryset(self):
         shop_id = self.kwargs.get('shop_id')
@@ -174,7 +175,7 @@ class ProductPacketListCreateAPIView(ListCreateAPIView):
     
 class ProductPacketDetailUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = ProductPacketSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ShopPermission]
     
     def get_object(self):
         shop_id = self.kwargs.get('shop_id')
@@ -215,7 +216,7 @@ class ProductPacketDetailUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
     
 class PanierListCreateAPIView(ListCreateAPIView):
     serializer_class = PanierSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ShopPermission]
     
     def get_queryset(self):
         shop_id = self.kwargs.get('shop_id')
@@ -242,7 +243,7 @@ class PanierListCreateAPIView(ListCreateAPIView):
     
 class PanierDetailUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):    
     serializer_class = PanierSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ShopPermission]
     
     def get_object(self):
         shop_id = self.kwargs.get('shop_id')
@@ -283,7 +284,7 @@ class PanierDetailUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
     
 class CommandeListCreateAPIView(ListCreateAPIView):
     serializer_class = CommandeSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ShopPermission]
     
     def get_queryset(self):
         shop_id = self.kwargs.get('shop_id')
@@ -310,7 +311,7 @@ class CommandeListCreateAPIView(ListCreateAPIView):
 
 class CommandeDetailUpdateDeleteAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = CommandeSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, ShopPermission]
     
     def get_object(self):
         shop_id = self.kwargs.get('shop_id')

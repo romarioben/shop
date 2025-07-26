@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+
+from auth_app.permissions import EstAdminPermission
 from .serializers import ClientSerializer, ShopSerializer
 from .models import Client, Shop
 from rest_framework.permissions import IsAuthenticated
@@ -12,7 +14,7 @@ class ShopListCreateView(ListCreateAPIView):
     """
     View to list all shops or create a new shop.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, EstAdminPermission]
     serializer_class = ShopSerializer
 
     def get_queryset(self):
@@ -40,7 +42,7 @@ class ShopDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
     """
     View to retrieve, update or delete a shop.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, EstAdminPermission]
     serializer_class = ShopSerializer
 
     def get_queryset(self):
