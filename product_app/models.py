@@ -80,6 +80,7 @@ class ProductPacket(Product):
 class Panier(SoftDeleteModel):
     """C'est un panier de produits, peut être un paquet ou un produit individuel"""
     client = models.ForeignKey('shop_app.Client', on_delete=models.CASCADE, related_name='paniers')
+    shop = models.ForeignKey('shop_app.Shop', on_delete=models.CASCADE, related_name='paniers')
     prix_total = models.PositiveIntegerField(default=0)
     est_paye = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
@@ -88,8 +89,9 @@ class Panier(SoftDeleteModel):
     def get_prix_total(self):
         """Calculer le prix total du panier"""
         # Calculer le prix total en sommant les prix de chaque commande dans le panier
-        self.prix_total = sum(commande.get_prix_total() for commande in self.commandes_set.all())
-        self.save()
+        self.prix_total = sum(commande.get_prix_total() for commande in self.commandes.all())
+        if not self.id:
+            self.save()
         return self.prix_total
 
     def payer(self, user=None):
@@ -109,8 +111,9 @@ class Panier(SoftDeleteModel):
     
     def save(self, *args, **kwargs):
         """Override save to update the total price before saving"""
-        self.prix_total = self.get_prix_total()
         super().save(*args, **kwargs)
+        # self.prix_total = self.get_prix_total()
+        
     def __str__(self):
         return f'Panier de  {self.client.nom}'
     
@@ -121,6 +124,7 @@ class Commande(SoftDeleteModel):
     client = models.ForeignKey('shop_app.Client', on_delete=models.CASCADE, related_name='commandes')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='commandes')
     quantite = models.PositiveIntegerField(default=1)
+    shop = models.ForeignKey('shop_app.Shop', on_delete=models.CASCADE, related_name='commandes')
     panier = models.ForeignKey(Panier, on_delete=models.CASCADE, related_name='commandes', null=True, blank=True)
     prix_total = models.PositiveIntegerField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -54,8 +54,8 @@ class ProductPacketSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_at', 'updated_at')
 
     def create(self, validated_data):
-        product = Product.objects.create(**validated_data)
-        return product
+        product_packet = ProductPacket.objects.create(**validated_data)
+        return product_packet
 
     def update(self, instance, validated_data):
         for attr, value in validated_data.items():
@@ -86,11 +86,12 @@ class CommandeSerializer(serializers.ModelSerializer):
     
 class PanierSerializer(serializers.ModelSerializer):
     client_nom = serializers.ReadOnlyField(source='client.nom')
+    commandes = CommandeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Panier
         fields = '__all__'
-        read_only_fields = ('id', 'date_created', 'date_updated', 'prix_total', 'est_paye')
+        read_only_fields = ('id', 'date_created', 'date_updated', 'prix_total', 'est_paye', 'client_nom', 'commandes')
 
     def create(self, validated_data):
         panier = Panier.objects.create(**validated_data)
@@ -102,3 +103,6 @@ class PanierSerializer(serializers.ModelSerializer):
         instance.updated_at = timezone.now()
         instance.save()
         return instance
+
+    def get_commandes(self, obj):
+        return CommandeSerializer(obj.commandes.all(), many=True).data
