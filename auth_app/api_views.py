@@ -7,6 +7,7 @@ from . import models
 from .serializers import UserSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
 
 class UserDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
     """
@@ -42,6 +43,17 @@ class UserDetailUpdateDeleteView(RetrieveUpdateDestroyAPIView):
         user = self.get_object()
         user.delete()
         return Response(status=204)
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def profile(request):
+    """
+    View to return the profile of the authenticated user.
+    """
+    if request.user.is_authenticated:
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data, status=200)
+    return Response({"detail": "Authentication credentials were not provided."}, status=401)
 
 class UserCreateView(CreateAPIView):
     """
